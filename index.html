@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Visualización de Serie - Examen Matemática V</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        body { font-family: sans-serif; background-color: #f4f4f9; padding: 20px; }
+        .container { max-width: 900px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h2 { color: #2c3e50; text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Convergencia de Sumas Parciales (n=10, β=2)</h2>
+        <div id="grafico"></div>
+    </div>
+
+    <script>
+        const beta = 2;
+        const x = Math.PI / 2; // Usamos x = pi/2 para que sin^2(x) = 1
+        const numTerminos = 10;
+        
+        let sumaAcumulada = 0;
+        const nValues = [];
+        const sValues = []; // Sumas parciales
+
+        for (let n = 1; n <= numTerminos; n++) {
+            // Término general a_n
+            const an = (9 * Math.pow(Math.sin(x), 2)) / (Math.pow(5, n) + beta);
+            sumaAcumulada += an;
+            
+            nValues.push(n);
+            sValues.push(sumaAcumulada);
+        }
+
+        const trace = {
+            x: nValues,
+            y: sValues,
+            mode: 'lines+markers',
+            type: 'scatter',
+            name: 'Suma Parcial S<sub>n</sub>',
+            line: { color: '#e67e22', shape: 'spline' },
+            marker: { size: 8, color: '#d35400' }
+        };
+
+        const layout = {
+            xaxis: { title: 'Número de términos (n)', dtick: 1 },
+            yaxis: { title: 'Valor de la suma acumulada' },
+            margin: { t: 40 },
+            annotations: [{
+                x: 10, y: sValues[9],
+                text: `Límite ≈ ${sValues[9].toFixed(4)}`,
+                showarrow: true, arrowhead: 2, ax: -40, ay: -40
+            }]
+        };
+
+        Plotly.newPlot('grafico', [trace], layout);
+    </script>
+</body>
+</html>
